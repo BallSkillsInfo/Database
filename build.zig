@@ -4,12 +4,22 @@ pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
+    const lib = b.addSharedLibrary(.{
+        .name = "BallSkillsInfoDB",
+        .root_source_file = .{ .path = "src/lib.zig" },
+        .target = target,
+        .optimize = optimize,
+        .version = .{ .major = 1, .minor = 2, .patch = 3 },
+    });
+    b.installArtifact(lib);
+
     const exe = b.addExecutable(.{
         .name = "BallSkillsInfoDatabase",
         .root_source_file = .{ .path = "src/main.zig" },
         .target = target,
         .optimize = optimize,
     });
+    exe.linkLibrary(lib);
     b.installArtifact(exe);
 
     const run_cmd = b.addRunArtifact(exe);
